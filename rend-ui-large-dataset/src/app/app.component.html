@@ -1,0 +1,48 @@
+<h1>Render UI Exercise With Large Dataset</h1>
+<div *ngIf="loader" class="spinner-border" role="status"
+ style="width:10rem;height:10rem;position: absolute;margin:20% 20%;z-index:3">
+</div>
+<div *ngIf="loader" id="pano"></div>
+<div>
+  <input [(ngModel)] = "searchTerm" (ngModelChange)="onChangeSearchTerm()" placeholder="Search for id or ruleName"/>
+
+  <span *ngIf="searchTerm">Showing {{searchResults.length}} result<span *ngIf="searchResults.length > 1">s</span></span>
+</div>
+
+<table>
+  <thead>
+    <th>No.</th>
+    <th class="min-width-for-search" style="cursor:pointer;" (click)="this.sortBy='id'; this.triggerSortingLogic();">
+      <span *ngIf="sortBy === 'id'">
+        <i *ngIf="sortDirection === 'asc'" class="fa fa-chevron-up"></i> 
+        <i *ngIf="sortDirection === 'desc'" class="fa fa-chevron-down"></i>
+      </span>id
+    </th>
+    <th class="min-width-for-search" style="cursor:pointer;" (click)="this.sortBy='ruleName'; this.triggerSortingLogic();">
+      <span *ngIf="sortBy === 'ruleName'">
+        <i *ngIf="sortDirection === 'asc'" class="fa fa-chevron-up"></i> 
+        <i *ngIf="sortDirection === 'desc'" class="fa fa-chevron-down"></i>
+      </span>ruleName
+    </th>
+    <th class="min-width-for-btns">Actions</th>
+  </thead>
+  <tbody>
+    <tr *ngFor = "let item of searchResults, index as i">
+      <td>{{i+1}}</td>
+      <td class="min-width-for-search">
+        {{item.id}}    
+      </td>
+      <td class="min-width-for-search">
+        {{item.ruleName}}    
+      </td>
+      <td class="min-width-for-btns">
+        <button (click)="deleteItem(item)">Delete</button>
+        <button (click)="cloneItem(item)">Clone</button>
+        <button [disabled] = "i==0" (click)="moveUpItem(item, i)">Move up</button>
+        <button [disabled] = "i>= listData.length -1" (click)="moveDownItem(item, i)">Move Down</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="searchResults.length === 0 && !loader">No results found..</div>
